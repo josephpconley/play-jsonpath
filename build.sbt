@@ -1,6 +1,6 @@
 name := "play-jsonpath"
 
-organization := "com.josephconley"
+organization := "com.josephpconley"
 
 version := "1.0"
 
@@ -11,6 +11,35 @@ libraryDependencies ++= Seq(
 	"io.gatling" % "jsonpath_2.10" % "0.4.0",
 	"com.typesafe.play" %% "play-test" % "[2.2.0,)" % "test"
 )
+
+publishMavenStyle := true
+
+publishArtifact in Test := false
+
+publishTo := {
+  val nexus = "https://oss.sonatype.org/"
+  if (isSnapshot.value)
+    Some("snapshots" at nexus + "content/repositories/snapshots")
+  else
+    Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+}
+
+licenses := Seq("BSD-style" -> url("http://www.opensource.org/licenses/bsd-license.php"))
+
+homepage := Some(url("https://github.com/josephpconley/play-jsonpath"))
+
+pomExtra := (
+    <scm>
+      <url>git@github.com:josephpconley/play-jsonpath.git</url>
+      <connection>scm:git:git@github.com:josephpconley/play-jsonpath.git</connection>
+    </scm>
+    <developers>
+      <developer>
+        <id>josephpconley</id>
+        <name>Joe Conley</name>
+        <url>http://www.josephpconley.com</url>
+      </developer>
+    </developers>)
 
 //lazy val sitePath = settingKey[File]("Path to the publishing site")
 //
