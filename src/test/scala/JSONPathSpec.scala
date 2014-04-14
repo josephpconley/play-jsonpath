@@ -4,9 +4,7 @@ import play.api.test._
 import io.gatling.jsonpath.Parser
 
 /**
- * Add your spec here.
- * You can mock out a whole application including requests, plugins etc.
- * For more information, consult the wiki.
+ *
  */
 class JSONPathSpec extends PlaySpecification {
 
@@ -19,6 +17,7 @@ class JSONPathSpec extends PlaySpecification {
 
     "field" in {
       JSONPath.query("$.id", json) must be_==(JsNumber(1))
+      JSONPath.query("$['id']", json) must be_==(JsNumber(1))
     }
 
     "recursive field" in {
@@ -33,6 +32,7 @@ class JSONPathSpec extends PlaySpecification {
     "any field" in {
       JSONPath.query("$.*", json) must be_==(JsArray(json.fields.map(_._2)))
       JSONPath.query("$.tags.*", json) must be_==(JsArray(tags.map(JsString(_))))
+      JSONPath.query("$['tags'].*", json) must be_==(JsArray(tags.map(JsString(_))))
     }
 
     "recursive any" in {
@@ -43,14 +43,25 @@ class JSONPathSpec extends PlaySpecification {
       tags.indices.foreach{ i =>
         JSONPath.query("$.tags[" + i + ":]", json) must be_==(JsArray(tags.drop(i).map(JsString(_))))
       }
+      JSONPath.query("$.tags[2]", json) must be_==(JsString("father"))
       JSONPath.query("$.tags[0:3:2]", json) must be_==(JsArray(Seq(JsString(tags(0)), JsString(tags(2)))))
       JSONPath.query("$.tags[-2:]", json) must be_==(JsArray(tags.takeRight(2).map(JsString(_))))
       JSONPath.query("$.tags[:-2]", json) must be_==(JsArray(tags.dropRight(2).map(JsString(_))))
     }
 
+    //TODO need to figure out if we should implicitly flatten on the fly
+//    "recursive array slices" in {
+//      println(JSONPath.query("$..address[1]", json))
+//      true must beTrue
+//    }
+
     "array random" in {
       JSONPath.query("$.tags[0,2]", json) must be_==(JsArray(Seq(JsString(tags(0)), JsString(tags(2)))))
       JSONPath.query("$.tags[-1]", json) must be_==(JsString(tags.last))
+    }
+
+    "array recursive" in {
+      JSONPath.query("$.address[*].city", json).as[JsArray].value.size must be_==(3)
     }
 
     "has filter" in {
@@ -77,11 +88,11 @@ class JSONPathSpec extends PlaySpecification {
     }
 
     "print tokens" in {
-//      val jsonPath = "$..location[?(@.name == 'Vegas' || @.name == 'Dayton')]"
-      val jsonPath = "$.store.book[?(@.price && @.book.price > 10)]"
+      val jsonPath = "$..book[0][1]"
+//      val jsonPath = "$..book[(@.length-1)]"
 
       val tokens = new Parser().compile(jsonPath).get
-//      println(tokens.mkString("\n"))
+      println(tokens.mkString("\n"))
 
       tokens.isEmpty must beFalse
     }

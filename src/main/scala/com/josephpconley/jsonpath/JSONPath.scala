@@ -21,10 +21,26 @@ object JSONPath {
   }
 
   def parse(tokens: List[PathToken], js: JsValue): JsValue = tokens.foldLeft[JsValue](js)( (js, token) => token match {
-    case Field(name) => js \ name
+    case Field(name) => js match {
+      case JsObject(fields) => js \ name
+      case JsArray(arr) => JsArray(arr.map(_ \ name))
+      case _ => error()
+    }
     case RecursiveField(name) => js match {
-      case JsObject(fields) => JsArray(js \\ name)
-      case JsArray(arr) => JsArray(arr.flatMap(_ \\ name))
+      case JsObject(fields) => {
+        var value = js \\ name
+        if(value.head.isInstanceOf[JsArray]){
+          value = value.flatMap(_.as[JsArray].value)
+        }
+        JsArray(value)
+      }
+      case JsArray(arr) => {
+        var value = arr.flatMap(_ \\ name)
+        if(value.head.isInstanceOf[JsArray]){
+          value = value.flatMap(_.as[JsArray].value)
+        }
+        JsArray(value)
+      }
       case _ => error()
     }
     case MultiField(names) => js match {
@@ -50,6 +66,8 @@ object JSONPath {
     case ArrayRandomAccess(indices) => {
       val arr = js.as[JsArray].value
       val selectedIndices = indices.map(i => if(i >= 0) i else arr.size + i).toSet.toSeq
+//      println(selectedIndices + " " + js)
+
       if(selectedIndices.size == 1) arr(selectedIndices.head) else JsArray(selectedIndices.map(arr(_)))
     }
     case ft: FilterToken => JsArray(parseFilterToken(ft, js))
