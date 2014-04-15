@@ -18,8 +18,8 @@ val json = Json.parse("""
  "name": "Joe",
  "tags": ["programmer", "husband", "father", "golfer"],
  "address": [
- {"id": 2, "street": "123 Main St.", "city": "Springfield", "state": "PA"},
- {"id": 3, "street": "456 Main St.", "city": "Devon", "state": "PA", "work": true}
+    {"id": 2, "street": "123 Main St.", "city": "Springfield", "state": "PA"},
+    {"id": 3, "street": "456 Main St.", "city": "Sea Isle City", "state": "NJ", "beach": true}
  ]
 }
 """
@@ -27,15 +27,12 @@ val json = Json.parse("""
 import com.josephpconley.jsonpath.JSONPath
 
 
-//returns id field from root
-JSONPath.query("$.id", json)
-
-//returns all id fields
-JSONPath.query("$..id", json)
-
-//returns an array of cities from the address array
-JSONPath.query("$.address[*].city", json)
+JSONPath.query("$.id", json)                    //JsNumber(1)
+JSONPath.query("$..id", json)                   //JsArray(JsNumber(1), JsNumber(2), JsNumber(3))
+JSONPath.query("$.address[*].city", json)       //JsArray(JsString("Springfield"), JsString("Sea Isle City"))
+JSONPath.query("$.address[?(@.beach)]", json)   //JsArray(JsObject(Seq("id" -> JsNumber(3), "street" -> JsString("456 Main St."), "city" -> JsString("Sea Isle City"), "state" -> JsString("NJ"), "beach" -> JsBoolean(true)))
 ```
 
+## Blog post
 
-
+You can read more about the library [here](http://www.josephpconley.com/2014/04/15/jsonpath-for-play.html)
