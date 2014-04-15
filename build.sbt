@@ -24,7 +24,7 @@ publishTo := {
     Some("releases"  at nexus + "service/local/staging/deploy/maven2")
 }
 
-licenses := Seq("BSD-style" -> url("http://www.opensource.org/licenses/bsd-license.php"))
+licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT"))
 
 homepage := Some(url("https://github.com/josephpconley/play-jsonpath"))
 
