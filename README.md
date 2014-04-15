@@ -26,7 +26,6 @@ val json = Json.parse("""
 
 import com.josephpconley.jsonpath.JSONPath
 
-
 JSONPath.query("$.id", json)                    //JsNumber(1)
 JSONPath.query("$..id", json)                   //JsArray(JsNumber(1), JsNumber(2), JsNumber(3))
 JSONPath.query("$.address[*].city", json)       //JsArray(JsString("Springfield"), JsString("Sea Isle City"))
