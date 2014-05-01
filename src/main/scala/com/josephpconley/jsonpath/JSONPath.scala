@@ -13,6 +13,8 @@ import scala.util.Try
 object JSONPath {
   lazy val parser = new Parser
 
+  def compile(q: String) = Try(parser.compile(q)).isSuccess
+
   def error(msg: Option[String] = None) = throw new Exception("Bad JSONPath query" + msg.map(" :" + _).getOrElse(""))
 
   def query(q: String, js: JsValue): JsValue = {
