@@ -4,11 +4,17 @@ organization := "com.josephpconley"
 
 version := "1.0"
 
+scalaVersion := "2.11.4"
+
+crossScalaVersions := Seq("2.10.4", "2.11.4")
+
 resolvers += "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases/"
 
+resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
+
 libraryDependencies ++= Seq(
-	"com.typesafe.play" %% "play" % "[2.2.0,)",
-	"io.gatling" % "jsonpath_2.10" % "0.4.0",
+	"com.typesafe.play" %% "play-json" % "[2.2.0,)",
+	"io.gatling" %% "jsonpath" % "[0.4.0,)",
 	"com.typesafe.play" %% "play-test" % "[2.2.0,)" % "test"
 )
 
