@@ -6,14 +6,10 @@ import io.gatling.jsonpath._
 import io.gatling.jsonpath.AST._
 import scala.util.Try
 
-/**
- * User: jconley
- * Date: 4/3/2014
- */
 object JSONPath {
   lazy val parser = new Parser
 
-  def compile(q: String) = Try(parser.compile(q)).isSuccess
+  def compile(q: String) = parser.compile(q).successful
 
   def error(msg: Option[String] = None) = throw new Exception("Bad JSONPath query" + msg.map(" :" + _).getOrElse(""))
 
