@@ -15,7 +15,7 @@ object JSONPath {
 
   def compile(q: String) = Try(parser.compile(q)).isSuccess
 
-  def error(msg: Option[String] = None) = throw new Exception("Bad JSONPath query" + msg.map(" :" + _).getOrElse(""))
+  def error(msg: String = "") = throw new Exception("Bad JSONPath query " + msg)
 
   def query(q: String, js: JsValue): JsValue = {
     val tokens = parser.compile(q).getOrElse(error())
@@ -24,8 +24,8 @@ object JSONPath {
 
   def parse(tokens: List[PathToken], js: JsValue): JsValue = tokens.foldLeft[JsValue](js)( (js, token) => token match {
     case Field(name) => js match {
-      case JsObject(fields) => js \ name
-      case JsArray(arr) => JsArray(arr.map(_ \ name))
+      case JsObject(fields) => (js \ name).getOrElse(error())
+      case JsArray(arr) => JsArray(arr.map(obj => (obj \ name).getOrElse(error())))
       case _ => error()
     }
     case RecursiveField(name) => js match {
@@ -46,11 +46,11 @@ object JSONPath {
       case _ => error()
     }
     case MultiField(names) => js match {
-      case JsObject(fields) => JsArray(fields.filter(f => names.contains(f._1)).map(_._2))
+      case JsObject(fields) => JsArray(fields.filter(f => names.contains(f._1)).map(_._2).toSeq)
       case _ => error()
     }
     case AnyField => js match {
-      case JsObject(fields) => JsArray(fields.map(_._2))
+      case JsObject(fields) => JsArray(fields.map(_._2).toSeq)
       case JsArray(arr) => js
       case _ => error()
     }
