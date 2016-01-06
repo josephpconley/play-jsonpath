@@ -24,8 +24,10 @@ object JSONPath {
 
   def parse(tokens: List[PathToken], js: JsValue): JsValue = tokens.foldLeft[JsValue](js)( (js, token) => token match {
     case Field(name) => js match {
-      case JsObject(fields) => (js \ name).getOrElse(error())
-      case JsArray(arr) => JsArray(arr.map(obj => (obj \ name).getOrElse(error())))
+      case JsObject(fields) => {
+        (js \ name).toOption.getOrElse(error("Couldn't find field"))
+      }
+      case JsArray(arr) => JsArray(arr.map(obj => (obj \ name).toOption.getOrElse(error())))
       case _ => error()
     }
     case RecursiveField(name) => js match {
