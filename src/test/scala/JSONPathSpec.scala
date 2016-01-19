@@ -3,10 +3,6 @@ import play.api.libs.json._
 import play.api.test._
 import io.gatling.jsonpath.Parser
 
-/**
- *
- */
-/*
 class JSONPathSpec extends PlaySpecification {
 
   "JSON" should {
@@ -132,4 +128,3 @@ class JSONPathSpec extends PlaySpecification {
       |}
     """.stripMargin
 }
-*/

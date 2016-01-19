@@ -11,11 +11,11 @@ import scala.util.Try
  * Date: 4/3/2014
  */
 object JSONPath {
-  lazy val parser = new Parser
+  private val parser = new Parser
 
-  def compile(q: String) = Try(parser.compile(q)).isSuccess
+  private def compile(q: String) = Try(parser.compile(q)).isSuccess
 
-  def error(msg: String = "") = throw new Exception("Bad JSONPath query " + msg)
+  private def error(msg: String = "") = throw new Exception("Bad JSONPath query " + msg)
 
   def query(q: String, js: JsValue): JsValue = {
     val tokens = parser.compile(q).getOrElse(error())
@@ -24,10 +24,8 @@ object JSONPath {
 
   def parse(tokens: List[PathToken], js: JsValue): JsValue = tokens.foldLeft[JsValue](js)( (js, token) => token match {
     case Field(name) => js match {
-      case JsObject(fields) => {
-        (js \ name).toOption.getOrElse(error("Couldn't find field"))
-      }
-      case JsArray(arr) => JsArray(arr.map(obj => (obj \ name).toOption.getOrElse(error())))
+      case JsObject(fields) => fields.find(_._1 == name).map(_._2).getOrElse(error("Couldn't find field"))
+      case JsArray(arr) => JsArray(arr.map(obj => (obj \ name).asOpt[JsValue].getOrElse(error())))
       case _ => error()
     }
     case RecursiveField(name) => js match {
