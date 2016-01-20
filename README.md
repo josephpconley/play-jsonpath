@@ -18,7 +18,7 @@ Here are the versions of this plugin compatible with the Play JSON library
 
 ## Install
 
-`libraryDependencies += "com.josephpconley" %% "play-jsonpath" % "1.1"`
+`libraryDependencies += "com.josephpconley" %% "play-jsonpath" % "2.4.0"`
 
 ## Example Usage
 
