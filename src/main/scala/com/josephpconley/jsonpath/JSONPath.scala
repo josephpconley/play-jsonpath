@@ -13,9 +13,9 @@ import scala.util.Try
 object JSONPath {
   private val parser = new Parser
 
-  private def compile(q: String) = Try(parser.compile(q)).isSuccess
-
   private def error(msg: String = "") = throw new Exception("Bad JSONPath query " + msg)
+
+  def compile(q: String) = Try(parser.compile(q)).isSuccess
 
   def query(q: String, js: JsValue): JsValue = {
     val tokens = parser.compile(q).getOrElse(error())
@@ -76,7 +76,7 @@ object JSONPath {
     case _ => js
   })
 
-  def parseFilterToken(ft: FilterToken, js: JsValue): Seq[JsValue] = ft match {
+  private def parseFilterToken(ft: FilterToken, js: JsValue): Seq[JsValue] = ft match {
     case HasFilter(SubQuery(tokens)) =>
       (for{
         arr <- js.asOpt[JsArray]
@@ -108,7 +108,7 @@ object JSONPath {
     }
   }
 
-  def parseFilterValue(fv: FilterValue, js: JsValue): Any = fv match {
+  private def parseFilterValue(fv: FilterValue, js: JsValue): Any = fv match {
     case SubQuery(tokens) => Try{
       JSONPath.primitive(parse(tokens, js)) match {
         case n:Number => n.doubleValue()
