@@ -11,11 +11,11 @@ import scala.util.Try
  * Date: 4/3/2014
  */
 object JSONPath {
-  lazy val parser = new Parser
+  private val parser = new Parser
+
+  private def error(msg: String = "") = throw new Exception("Bad JSONPath query " + msg)
 
   def compile(q: String) = Try(parser.compile(q)).isSuccess
-
-  def error(msg: Option[String] = None) = throw new Exception("Bad JSONPath query" + msg.map(" :" + _).getOrElse(""))
 
   def query(q: String, js: JsValue): JsValue = {
     val tokens = parser.compile(q).getOrElse(error())
@@ -24,8 +24,8 @@ object JSONPath {
 
   def parse(tokens: List[PathToken], js: JsValue): JsValue = tokens.foldLeft[JsValue](js)( (js, token) => token match {
     case Field(name) => js match {
-      case JsObject(fields) => js \ name
-      case JsArray(arr) => JsArray(arr.map(_ \ name))
+      case JsObject(fields) => fields.find(_._1 == name).map(_._2).getOrElse(error("Couldn't find field"))
+      case JsArray(arr) => JsArray(arr.map(obj => (obj \ name).asOpt[JsValue].getOrElse(error())))
       case _ => error()
     }
     case RecursiveField(name) => js match {
@@ -46,11 +46,11 @@ object JSONPath {
       case _ => error()
     }
     case MultiField(names) => js match {
-      case JsObject(fields) => JsArray(fields.filter(f => names.contains(f._1)).map(_._2))
+      case JsObject(fields) => JsArray(fields.filter(f => names.contains(f._1)).map(_._2).toSeq)
       case _ => error()
     }
     case AnyField => js match {
-      case JsObject(fields) => JsArray(fields.map(_._2))
+      case JsObject(fields) => JsArray(fields.map(_._2).toSeq)
       case JsArray(arr) => js
       case _ => error()
     }
@@ -76,7 +76,7 @@ object JSONPath {
     case _ => js
   })
 
-  def parseFilterToken(ft: FilterToken, js: JsValue): Seq[JsValue] = ft match {
+  private def parseFilterToken(ft: FilterToken, js: JsValue): Seq[JsValue] = ft match {
     case HasFilter(SubQuery(tokens)) =>
       (for{
         arr <- js.asOpt[JsArray]
@@ -108,7 +108,7 @@ object JSONPath {
     }
   }
 
-  def parseFilterValue(fv: FilterValue, js: JsValue): Any = fv match {
+  private def parseFilterValue(fv: FilterValue, js: JsValue): Any = fv match {
     case SubQuery(tokens) => Try{
       JSONPath.primitive(parse(tokens, js)) match {
         case n:Number => n.doubleValue()
