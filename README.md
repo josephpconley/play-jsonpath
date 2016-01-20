@@ -5,7 +5,14 @@ This library enables JSONPath queries on the Play JsValue.
 
 Explanation of JSONPath can be found here: [http://goessner.net/articles/JsonPath/](http://goessner.net/articles/JsonPath/)
 
-This version should work with Play apps running 2.1.x through 2.3.x (update for Play 2.4.x is [pending](https://github.com/josephpconley/play-jsonpath/issues/4)). 
+## Releases
+
+Here are the versions of this plugin compatible with the Play JSON library
+
+| Plugin version | Play version    |
+|----------------|-----------------|
+| 2.4.0          |  2.4.x          |
+| 2.3.0          | [2.2.x, 2.3.x]  |
 
 ## Install
 
