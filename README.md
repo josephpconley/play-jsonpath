@@ -1,6 +1,8 @@
 JSONPath library for Play
 =====================================
 
+[![Join the chat at https://gitter.im/josephpconley/play-jsonpath](https://badges.gitter.im/josephpconley/play-jsonpath.svg)](https://gitter.im/josephpconley/play-jsonpath?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 This library enables JSONPath queries on the Play JsValue.
 
 Explanation of JSONPath can be found here: [http://goessner.net/articles/JsonPath/](http://goessner.net/articles/JsonPath/)
