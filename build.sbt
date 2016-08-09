@@ -13,7 +13,7 @@ resolvers += "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases/
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 
 libraryDependencies ++= Seq(
-	"com.typesafe.play" %% "play-json" % "[2.4.0,2.4.+)",
+	"com.typesafe.play" %% "play-json" % "[2.5.0,2.5.+)",
 	"io.gatling" %% "jsonpath" % "0.6.4",
   "org.scalatest" %% "scalatest" % "2.2.6" % "test"
 )
