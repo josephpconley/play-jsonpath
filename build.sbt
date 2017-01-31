@@ -22,6 +22,9 @@ publishMavenStyle := true
 
 publishArtifact in Test := false
 
+pgpPublicRing := file("/home/jconley/.gnupg/pubring.gpg")
+pgpSecretRing := file("/home/jconley/.gnupg/secring.gpg")
+
 publishTo := {
   val nexus = "https://oss.sonatype.org/"
   if (isSnapshot.value)
