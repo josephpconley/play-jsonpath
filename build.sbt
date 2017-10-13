@@ -2,7 +2,7 @@ name := "play-jsonpath"
 
 organization := "com.josephpconley"
 
-version := "2.5.0"
+version := "2.6.0"
 
 scalaVersion := "2.11.4"
 
@@ -13,7 +13,7 @@ resolvers += "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases/
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 
 libraryDependencies ++= Seq(
-	"com.typesafe.play" %% "play-json" % "[2.5.0,2.5.+)",
+	"com.typesafe.play" %% "play-json" % "[2.6.0,2.6.+)",
 	"io.gatling" %% "jsonpath" % "0.6.4",
   "org.scalatest" %% "scalatest" % "2.2.6" % "test"
 )
