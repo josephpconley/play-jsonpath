@@ -2,7 +2,7 @@ name := "play-jsonpath"
 
 organization := "com.josephpconley"
 
-version := "2.6.0"
+version := "2.7.0-SNAPSHOT"
 
 scalaVersion := "2.11.4"
 
