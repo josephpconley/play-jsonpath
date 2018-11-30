@@ -4,18 +4,18 @@ organization := "com.josephpconley"
 
 version := "2.7.0-SNAPSHOT"
 
-scalaVersion := "2.11.4"
+scalaVersion := "2.12.7"
 
-crossScalaVersions := Seq("2.10.4", "2.11.4")
+crossScalaVersions := Seq("2.10.4", "2.11.4", "2.12.7")
 
 resolvers += "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases/"
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 
 libraryDependencies ++= Seq(
-	"com.typesafe.play" %% "play-json" % "[2.6.0,2.6.+)",
-	"io.gatling" %% "jsonpath" % "0.6.4",
-  "org.scalatest" %% "scalatest" % "2.2.6" % "test"
+  "com.typesafe.play" %% "play-json" % "[2.6.0,2.6.+)",
+  "io.gatling" %% "jsonpath" % "0.6.8",
+  "org.scalatest" %% "scalatest" % "3.0.5" % "test"
 )
 
 publishMavenStyle := true
